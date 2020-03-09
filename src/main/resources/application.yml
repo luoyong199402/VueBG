@@ -1,0 +1,44 @@
+server:
+  port: 6666
+
+spring:
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 1624787124@qq.com
+    password: odzdebdtdsyofdcg
+
+  jpa:
+    # 默认false，在日志里显示执行的sql语句
+    show-sql: true
+    database: mysql
+    #指定为update，每次启动项目检测表结构有变化的时候会新增字段，表不存在时会新建，如果指定create，则每次启动项目都会清空数据并删除表，再新建
+    hibernate.ddl-auto: update
+    properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      naming:
+        #physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        #指定jpa的自动表生成策略，驼峰自动映射为下划线格式
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+
+  datasource:
+    username: root
+    password: root
+    #同样 低版本的MySql不需要指定时区
+    url: jdbc:mysql://180.76.248.216:3306/oa-user?serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+    #mysql8.0以后的加密方式为caching_sha2_password，所以必须用com.mysql.cj.jdbc.Driver,前提是pom里引入的mysql-connector-java必须为8.0.12的，8.0.13不行，会报错
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    database: 0
+    host: 180.76.248.216
+    port: 6379
+    password: 123456
+
+cache:
+  default:
+    expire-time: 200
+  user:
+    expire-time: 180
+    name: test
