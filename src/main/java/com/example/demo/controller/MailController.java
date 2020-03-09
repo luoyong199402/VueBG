@@ -12,7 +12,7 @@ public class MailController {
 	private EmailService emailService;
 
 	@PostMapping
-	public void sendEmail(@RequestBody EmailEntity emailEntity) {
+	public void sendEmail(@RequestBody EmailEntity emailEntity) throws InterruptedException {
 		emailService.send(emailEntity);
 	}
 
