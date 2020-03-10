@@ -3,6 +3,7 @@ package com.example.demo.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,6 +39,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UrlLogoutSuccessHandler logoutSuccessHandler;
 
+	@Autowired
+	private CustomAuthenticationDetailsSource authenticationDetailsSource;
 
 	/**
 	 * 登录认证
@@ -61,26 +64,30 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				//关闭Session
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
-				//开放api路径
-				.authorizeRequests().antMatchers("/api/**").
-				permitAll()
-				.anyRequest().authenticated()
+					//开放api路径
+					.authorizeRequests().antMatchers("/api/**").
+					permitAll()
+					.anyRequest().authenticated()
 				//开启自动配置的登陆功能
 				.and()
 				//自定义登录请求路径(post请求)
-				.formLogin().usernameParameter("userName").passwordParameter("userPassword")
-				.loginProcessingUrl("/api/login")
-				//验证成功处理器
-				.successHandler(authenticationSuccessHandler)
-				//验证失败处理器
-				.failureHandler(authenticationFailureHandler).permitAll()
+				.formLogin()
+					.usernameParameter("username")
+					.passwordParameter("password")
+					.loginProcessingUrl("/api/login")
+					//验证成功处理器
+					.successHandler(authenticationSuccessHandler)
+					//验证失败处理器
+					.failureHandler(authenticationFailureHandler)
+					.permitAll()
+					.authenticationDetailsSource(authenticationDetailsSource)
 				.and()
-				//关闭拦截未登录自动跳转,改为返回json信息
-				.exceptionHandling().authenticationEntryPoint(selfLoginUrlAuthenticationEntryPoint())
+					//关闭拦截未登录自动跳转,改为返回json信息
+					.exceptionHandling().authenticationEntryPoint(selfLoginUrlAuthenticationEntryPoint())
 				//开启自动配置的注销功能
 				.and()
-				.logout()
-				.logoutUrl("/api/logout")
+					.logout()
+					.logoutUrl("/api/logout")
 				//注销成功处理器
 				.logoutSuccessHandler(logoutSuccessHandler).permitAll();
 //				.and()
