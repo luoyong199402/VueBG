@@ -1,5 +1,7 @@
 package com.example.demo.entity.dos;
 
+import com.example.demo.entity.dos.authority.GroupDO;
+import com.example.demo.entity.dos.authority.RoleDO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +11,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "vue_user", uniqueConstraints = {@UniqueConstraint(columnNames= {"username"})})
+@Table(name = "sys_user", uniqueConstraints = {@UniqueConstraint(columnNames= {"username"})})
 @Builder
 public class UserDO {
 	@Id
@@ -51,6 +54,12 @@ public class UserDO {
 			columnDefinition = "tinyint unsigned comment '用户是否启用'"
 	)
 	private Boolean enabled;
+
+	@ManyToMany(mappedBy = "userDoSet")
+	private Set<GroupDO> groupDOList;
+
+	@ManyToMany(mappedBy = "userDOSet")
+	private Set<RoleDO> roleDOSet;
 
 	@CreationTimestamp
 	@Column(

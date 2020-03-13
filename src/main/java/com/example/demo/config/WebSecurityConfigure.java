@@ -100,7 +100,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.and()
 					.logout()
 					.logoutUrl("/api/logout")
-				//注销成功处理器
+					//注销成功处理器
 					.logoutSuccessHandler(logoutSuccessHandler)
 					.permitAll()
 				.and()
