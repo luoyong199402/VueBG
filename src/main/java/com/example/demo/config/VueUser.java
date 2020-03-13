@@ -17,6 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Builder
 public class VueUser implements UserDetails {
+	private Long id;
 	private String username;
 	private String password;
 	private boolean accountNonExpired;

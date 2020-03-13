@@ -1,9 +1,11 @@
 package com.example.demo.config;
 
+import com.example.demo.filter.TokenAuthenticationFilter;
+import com.example.demo.filter.TokenLoginFilter;
+import com.example.demo.token.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,15 +44,22 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomAuthenticationDetailsSource authenticationDetailsSource;
 
+	@Autowired
+	private TokenManager tokenManager;
+
+	@Autowired
+	private VueUserDetailsServiceImpl vueUserDetailsService;
+
 	/**
 	 * 登录认证
 	 * @param auth 登陆管理器
 	 */
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//添加自定义登陆认证
 		auth.authenticationProvider(authenticationProvider);
 	}
+
 
 	/**
 	 * 具体配置登陆细节
@@ -65,13 +74,15 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 					//开放api路径
-					.authorizeRequests().antMatchers("/api/**").
-					permitAll()
-					.anyRequest().authenticated()
+					.authorizeRequests()
+					.antMatchers("/api/public/**")
+					.permitAll()
+					.anyRequest()
+					.authenticated()
 				//开启自动配置的登陆功能
 				.and()
-				//自定义登录请求路径(post请求)
-				.formLogin()
+					//自定义登录请求路径(post请求)
+					.formLogin()
 					.usernameParameter("username")
 					.passwordParameter("password")
 					.loginProcessingUrl("/api/login")
@@ -79,20 +90,22 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 					.successHandler(authenticationSuccessHandler)
 					//验证失败处理器
 					.failureHandler(authenticationFailureHandler)
-					.permitAll()
 					.authenticationDetailsSource(authenticationDetailsSource)
+					.permitAll()
 				.and()
 					//关闭拦截未登录自动跳转,改为返回json信息
-					.exceptionHandling().authenticationEntryPoint(selfLoginUrlAuthenticationEntryPoint())
+					.exceptionHandling()
+					.authenticationEntryPoint(unAuthorizedEntryPoint())
 				//开启自动配置的注销功能
 				.and()
 					.logout()
 					.logoutUrl("/api/logout")
 				//注销成功处理器
-				.logoutSuccessHandler(logoutSuccessHandler).permitAll();
-//				.and()
-//				//添加token过滤器
-//				.addFilter(new TokenAuthenticationFilter(authenticationManagerBean()));
+					.logoutSuccessHandler(logoutSuccessHandler)
+					.permitAll()
+				.and()
+					.addFilter(new TokenLoginFilter(authenticationManagerBean()))
+					.addFilter(new TokenAuthenticationFilter(authenticationManagerBean(), tokenManager));
 	}
 
 	/**
@@ -100,8 +113,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	 * @return AuthenticationEntryPoint
 	 */
 	@Bean
-	public AuthenticationEntryPoint selfLoginUrlAuthenticationEntryPoint() {
-		return new SelfLoginUrlAuthenticationEntryPoint("/");
+	public AuthenticationEntryPoint unAuthorizedEntryPoint() {
+		return new UnAuthorizedEntryPoint();
 	}
 
 	/**

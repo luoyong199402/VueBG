@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/mail")
+@RequestMapping("/api/public/mail")
 public class MailController {
 	@Autowired
 	private EmailService emailService;

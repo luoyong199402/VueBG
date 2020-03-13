@@ -31,6 +31,7 @@ public class VueUserDetailsServiceImpl implements UserDetailsService {
 
 	private VueUser generateVueUserByUserDO(UserDO userDO) {
 		return VueUser.builder()
+				.id(userDO.getId())
 				.username(userDO.getUsername())
 				.password(userDO.getPassword())
 				.accountNonExpired(userDO.getAccountNonExpired())

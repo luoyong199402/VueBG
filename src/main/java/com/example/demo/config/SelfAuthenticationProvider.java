@@ -43,7 +43,7 @@ public class SelfAuthenticationProvider implements AuthenticationProvider {
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		//对加密密码进行验证
 		if (bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
-			return new UsernamePasswordAuthenticationToken(username, password, null);
+			return new UsernamePasswordAuthenticationToken(userDetails, password, null);
 		} else {
 			throw new BadCredentialsException("密码错误");
 		}
