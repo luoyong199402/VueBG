@@ -1,5 +1,5 @@
 server:
-  port: 6666
+  port: 8888
 
 spring:
   mail:
@@ -9,25 +9,25 @@ spring:
     password: odzdebdtdsyofdcg
 
   jpa:
-    # Ä¬ÈÏfalse£¬ÔÚÈÕÖ¾ÀïÏÔÊ¾Ö´ĞĞµÄsqlÓï¾ä
+    # é»˜è®¤falseï¼Œåœ¨æ—¥å¿—é‡Œæ˜¾ç¤ºæ‰§è¡Œçš„sqlè¯­å¥
     show-sql: true
     database: mysql
-    #Ö¸¶¨Îªupdate£¬Ã¿´ÎÆô¶¯ÏîÄ¿¼ì²â±í½á¹¹ÓĞ±ä»¯µÄÊ±ºò»áĞÂÔö×Ö¶Î£¬±í²»´æÔÚÊ±»áĞÂ½¨£¬Èç¹ûÖ¸¶¨create£¬ÔòÃ¿´ÎÆô¶¯ÏîÄ¿¶¼»áÇå¿ÕÊı¾İ²¢É¾³ı±í£¬ÔÙĞÂ½¨
+    #æŒ‡å®šä¸ºupdateï¼Œæ¯æ¬¡å¯åŠ¨é¡¹ç›®æ£€æµ‹è¡¨ç»“æ„æœ‰å˜åŒ–çš„æ—¶å€™ä¼šæ–°å¢å­—æ®µï¼Œè¡¨ä¸å­˜åœ¨æ—¶ä¼šæ–°å»ºï¼Œå¦‚æœæŒ‡å®šcreateï¼Œåˆ™æ¯æ¬¡å¯åŠ¨é¡¹ç›®éƒ½ä¼šæ¸…ç©ºæ•°æ®å¹¶åˆ é™¤è¡¨ï¼Œå†æ–°å»º
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       naming:
         #physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        #Ö¸¶¨jpaµÄ×Ô¶¯±íÉú³É²ßÂÔ£¬ÍÕ·å×Ô¶¯Ó³ÉäÎªÏÂ»®Ïß¸ñÊ½
+        #æŒ‡å®šjpaçš„è‡ªåŠ¨è¡¨ç”Ÿæˆç­–ç•¥ï¼Œé©¼å³°è‡ªåŠ¨æ˜ å°„ä¸ºä¸‹åˆ’çº¿æ ¼å¼
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
   datasource:
     username: root
     password: root
-    #Í¬Ñù µÍ°æ±¾µÄMySql²»ĞèÒªÖ¸¶¨Ê±Çø
+    #åŒæ · ä½ç‰ˆæœ¬çš„MySqlä¸éœ€è¦æŒ‡å®šæ—¶åŒº
     url: jdbc:mysql://180.76.248.216:3306/vue-test?serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
-    #mysql8.0ÒÔºóµÄ¼ÓÃÜ·½Ê½Îªcaching_sha2_password£¬ËùÒÔ±ØĞëÓÃcom.mysql.cj.jdbc.Driver,Ç°ÌáÊÇpomÀïÒıÈëµÄmysql-connector-java±ØĞëÎª8.0.12µÄ£¬8.0.13²»ĞĞ£¬»á±¨´í
+    #mysql8.0ä»¥åçš„åŠ å¯†æ–¹å¼ä¸ºcaching_sha2_passwordï¼Œæ‰€ä»¥å¿…é¡»ç”¨com.mysql.cj.jdbc.Driver,å‰ææ˜¯pomé‡Œå¼•å…¥çš„mysql-connector-javaå¿…é¡»ä¸º8.0.12çš„ï¼Œ8.0.13ä¸è¡Œï¼Œä¼šæŠ¥é”™
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:

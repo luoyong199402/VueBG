@@ -1,5 +1,6 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
+import com.example.demo.config.security.authentication.VueUser;
 import com.example.demo.dao.UserDao;
 import com.example.demo.entity.dos.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;

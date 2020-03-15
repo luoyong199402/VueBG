@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
 import com.example.demo.filter.TokenAuthenticationFilter;
 import com.example.demo.filter.TokenLoginFilter;
@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 @Configuration
@@ -42,13 +43,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	private UrlLogoutSuccessHandler logoutSuccessHandler;
 
 	@Autowired
-	private CustomAuthenticationDetailsSource authenticationDetailsSource;
-
-	@Autowired
 	private TokenManager tokenManager;
-
-	@Autowired
-	private VueUserDetailsServiceImpl vueUserDetailsService;
 
 	/**
 	 * 登录认证
@@ -90,7 +85,6 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 					.successHandler(authenticationSuccessHandler)
 					//验证失败处理器
 					.failureHandler(authenticationFailureHandler)
-					.authenticationDetailsSource(authenticationDetailsSource)
 					.permitAll()
 				.and()
 					//关闭拦截未登录自动跳转,改为返回json信息
@@ -104,7 +98,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 					.logoutSuccessHandler(logoutSuccessHandler)
 					.permitAll()
 				.and()
-					.addFilter(new TokenLoginFilter(authenticationManagerBean()))
+					.addFilterBefore(tokenLoginFilter(), UsernamePasswordAuthenticationFilter.class)
 					.addFilter(new TokenAuthenticationFilter(authenticationManagerBean(), tokenManager));
 	}
 
@@ -126,5 +120,9 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+	}
+
+	public TokenLoginFilter tokenLoginFilter() throws Exception {
+		return new TokenLoginFilter(authenticationManagerBean());
 	}
 }

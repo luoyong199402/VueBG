@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

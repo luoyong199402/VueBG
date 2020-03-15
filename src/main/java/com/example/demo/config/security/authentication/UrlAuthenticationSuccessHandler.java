@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
 import com.example.demo.common.HttpResult;
 import com.example.demo.token.TokenManager;
@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ly
@@ -36,11 +38,13 @@ public class UrlAuthenticationSuccessHandler implements AuthenticationSuccessHan
 				.principal(authentication.getPrincipal()).build();
 
 		String token = tokenManager.createToken(tokenStore);
+		Map<String, Object> dataMap = new HashMap<>();
+		dataMap.put("token", token);
 
 		httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8");
 		httpServletResponse.setStatus(200);
 		PrintWriter writer = httpServletResponse.getWriter();
-		writer.write(objectMapper.writeValueAsString(new HttpResult(200,"登陆成功", null)));
+		writer.write(objectMapper.writeValueAsString(new HttpResult(200,"登陆成功", dataMap)));
 		writer.flush();
 		writer.close();
 	}

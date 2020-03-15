@@ -1,4 +1,4 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
 import com.example.demo.common.HttpResult;
 import com.example.demo.token.TokenManager;

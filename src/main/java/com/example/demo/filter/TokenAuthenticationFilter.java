@@ -1,5 +1,6 @@
 package com.example.demo.filter;
 
+import com.example.demo.config.security.authentication.CustomAuthenticationToken;
 import com.example.demo.token.TokenManager;
 import com.example.demo.token.TokenStore;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,9 +44,9 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 		chain.doFilter(req, res);
 	}
 
-	private UsernamePasswordAuthenticationToken getAuthentication(TokenStore tokenStore) {
+	private CustomAuthenticationToken getAuthentication(TokenStore tokenStore) {
 		if (tokenStore != null) {
-			return new UsernamePasswordAuthenticationToken(tokenStore.getPrincipal(), tokenStore.getCredentials(),tokenStore.getAuthorities());
+			return new CustomAuthenticationToken(tokenStore.getPrincipal(), tokenStore.getCredentials(), tokenStore.getAuthorities());
 		}
 		return null;
 	}

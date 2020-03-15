@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 @Getter
 public enum VerificationCodeEnum {
 	/**
-	 * 男性
+	 * 邮件
 	 */
 	EMAIL("1", "邮件"),
 
 	/**
-	 * 女性
+	 * 短信
 	 */
-	message("2", "短信");
+	MESSAGE("2", "短信");
 
 	private String value;
 	private String description;

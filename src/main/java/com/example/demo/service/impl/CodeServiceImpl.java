@@ -32,13 +32,11 @@ public class CodeServiceImpl implements CodeService {
 
 	@Override
 	public VerificationCodeAO addCode(VerificationCodeAO verificationCodeAO) {
-		VerificationCodeEnum verificationCodeEnum = VerificationCodeEnum.fromCode(verificationCodeAO.getType());
-
-		switch (verificationCodeEnum) {
+		switch (verificationCodeAO.getType()) {
 			case EMAIL:
 				verificationCodeAO = detailEmailVerificationCode(verificationCodeAO);
 				break;
-			case message:
+			case MESSAGE:
 				verificationCodeAO = detailMessageVerificationCode(verificationCodeAO);
 				break;
 			default:
@@ -81,7 +79,7 @@ public class CodeServiceImpl implements CodeService {
 	private VerificationCodeAO detailEmailVerificationCode(VerificationCodeAO verificationCodeAO) {
 		String verifyCodeKey = getVerifyCodeKey(verificationCodeAO);
 		if (!isRegenerate(verifyCodeKey)) {
-			throw new RuntimeException("验证码已申请。 验证码的有效期为10分钟。 申请1分钟后可以重新申请！");
+			return getCode(verificationCodeAO.getBusinessKey());
 		}
 
 		// 设置过期时间（默认为10分钟）

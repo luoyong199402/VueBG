@@ -1,10 +1,9 @@
-package com.example.demo.config;
+package com.example.demo.config.security.authentication;
 
 import com.example.demo.service.CodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,23 +26,17 @@ public class SelfAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		CustomWebAuthenticationDetails customWebAuthenticationDetails = (CustomWebAuthenticationDetails) authentication.getDetails();
-		// 验证码
-		String code = customWebAuthenticationDetails.getCode();
-		//表单输入的用户名
-		String username = (String) authentication.getPrincipal();
-		//表单输入的密码
-		String password = (String) authentication.getCredentials();
+		LoginInfo loginInfo = (LoginInfo) authentication.getPrincipal();
 
 		// 校验验证码
-		if (!codeService.validateCode(username, code)) {
+		if (!codeService.validateCode(loginInfo.getUsername(), loginInfo.getCode())) {
 			throw new BadCredentialsException("验证码校验失败！");
 		}
 
-		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(loginInfo.getUsername());
 		//对加密密码进行验证
-		if (bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
-			return new UsernamePasswordAuthenticationToken(userDetails, password, null);
+		if (bCryptPasswordEncoder.matches(loginInfo.getPassword(), userDetails.getPassword())) {
+			return new CustomAuthenticationToken(userDetails, null, null);
 		} else {
 			throw new BadCredentialsException("密码错误");
 		}
@@ -51,6 +44,6 @@ public class SelfAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<? extends Object> authentication) {
-		return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
+		return true;
 	}
 }

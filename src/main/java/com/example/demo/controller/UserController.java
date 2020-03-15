@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.config.VueUser;
+import com.example.demo.config.security.authentication.VueUser;
 import com.example.demo.entity.ao.RegisterUserAO;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
