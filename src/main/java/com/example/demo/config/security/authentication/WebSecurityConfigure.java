@@ -70,22 +70,11 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.and()
 					//开放api路径
 					.authorizeRequests()
-					.antMatchers("/api/public/**")
+					.antMatchers("/api/public/**", "/api/login")
 					.permitAll()
 					.anyRequest()
 					.authenticated()
 				//开启自动配置的登陆功能
-				.and()
-					//自定义登录请求路径(post请求)
-					.formLogin()
-					.usernameParameter("username")
-					.passwordParameter("password")
-					.loginProcessingUrl("/api/login")
-					//验证成功处理器
-					.successHandler(authenticationSuccessHandler)
-					//验证失败处理器
-					.failureHandler(authenticationFailureHandler)
-					.permitAll()
 				.and()
 					//关闭拦截未登录自动跳转,改为返回json信息
 					.exceptionHandling()
@@ -98,7 +87,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 					.logoutSuccessHandler(logoutSuccessHandler)
 					.permitAll()
 				.and()
-					.addFilterBefore(tokenLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+					// 处理token认证的过滤器。
+					.addFilterAt(tokenLoginFilter(), UsernamePasswordAuthenticationFilter.class)
 					.addFilter(new TokenAuthenticationFilter(authenticationManagerBean(), tokenManager));
 	}
 
@@ -122,7 +112,11 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+	@Bean
 	public TokenLoginFilter tokenLoginFilter() throws Exception {
-		return new TokenLoginFilter(authenticationManagerBean());
+		TokenLoginFilter tokenLoginFilter = new TokenLoginFilter(authenticationManagerBean());
+		tokenLoginFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+		tokenLoginFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
+		return tokenLoginFilter;
 	}
 }

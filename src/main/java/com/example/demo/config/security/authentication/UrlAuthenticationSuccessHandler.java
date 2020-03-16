@@ -41,7 +41,6 @@ public class UrlAuthenticationSuccessHandler implements AuthenticationSuccessHan
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("token", token);
 
-		httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8");
 		httpServletResponse.setStatus(200);
 		PrintWriter writer = httpServletResponse.getWriter();
 		writer.write(objectMapper.writeValueAsString(new HttpResult(200,"登陆成功", dataMap)));

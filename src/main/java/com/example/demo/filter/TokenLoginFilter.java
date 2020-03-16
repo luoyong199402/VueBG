@@ -22,12 +22,9 @@ import java.io.InputStream;
 
 public class TokenLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-
-	private AuthenticationManager authenticationManager;
-
 	public TokenLoginFilter(AuthenticationManager authenticationManager) {
-		super(new AntPathRequestMatcher("/login", "POST"));
-		this.authenticationManager = authenticationManager;
+		super(new AntPathRequestMatcher("/api/login", "POST"));
+		this.setAuthenticationManager(authenticationManager);
 	}
 
 	@Override
@@ -38,6 +35,14 @@ public class TokenLoginFilter extends AbstractAuthenticationProcessingFilter {
 
 		CustomAuthenticationToken authRequest = new CustomAuthenticationToken(loginInfo);
 		this.setDetails(request, authRequest);
+
+		// 设置编码和跨域处理
+		response.setHeader("Content-Type", "application/json;charset=utf-8");
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		response.addHeader("Access-Control-Allow-Headers", "Content-Type,X-CAF-Authorization-Token,sessionToken,X-TOKEN");
+
 		return this.getAuthenticationManager().authenticate(authRequest);
 	}
 
