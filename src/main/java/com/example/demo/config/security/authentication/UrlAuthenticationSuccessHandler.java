@@ -1,6 +1,7 @@
 package com.example.demo.config.security.authentication;
 
 import com.example.demo.common.HttpResult;
+import com.example.demo.token.RedisTokenManager;
 import com.example.demo.token.TokenManager;
 import com.example.demo.token.TokenStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,11 +37,15 @@ public class UrlAuthenticationSuccessHandler implements AuthenticationSuccessHan
 				.authorities(authentication.getAuthorities())
 				.credentials(authentication.getCredentials())
 				.isAuthenticated(authentication.isAuthenticated())
-				.principal(authentication.getPrincipal()).build();
+				.principal(authentication.getPrincipal())
+				.createTime(new Date())
+				.expirationDate(RedisTokenManager.getTokenExpireTime()).build();
 
 		String token = tokenManager.createToken(tokenStore);
 		Map<String, Object> dataMap = new HashMap<>();
 		dataMap.put("token", token);
+		dataMap.put("expirationDate", RedisTokenManager.getTokenExpireTime());
+		dataMap.put("createTime", tokenStore.getCreateTime());
 
 		httpServletResponse.setStatus(200);
 		PrintWriter writer = httpServletResponse.getWriter();

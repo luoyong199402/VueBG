@@ -32,6 +32,7 @@ public class SelfAuthenticationProvider implements AuthenticationProvider {
 		if (!codeService.validateCode(loginInfo.getUsername(), loginInfo.getCode())) {
 			throw new BadCredentialsException("验证码校验失败！");
 		}
+		codeService.clearCode(loginInfo.getUsername());
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginInfo.getUsername());
 		//对加密密码进行验证

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,6 @@ public class TokenStore {
 	private Object details;
 	private Object principal;
 	private Boolean isAuthenticated;
+	private Date createTime;
+	private Long expirationDate;
 }

@@ -47,4 +47,8 @@ public class RedisTokenManager implements TokenManager {
 	private String generateTokenKey() {
 		return TOKEN_CACHE_PREFIX + UUID.randomUUID().toString();
 	}
+
+	public static long getTokenExpireTime() {
+		return TOKEN_EXPIRE_TIME;
+	}
 }
