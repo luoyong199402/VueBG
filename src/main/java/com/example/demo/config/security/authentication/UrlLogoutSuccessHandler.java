@@ -31,6 +31,13 @@ public class UrlLogoutSuccessHandler implements LogoutSuccessHandler {
 		String header = httpServletRequest.getHeader("Authorized");
 		tokenManager.removeToken(header);
 
+		// 设置编码和跨域处理
+		httpServletResponse.setHeader("Content-Type", "application/json;charset=utf-8");
+		httpServletResponse.addHeader("Access-Control-Allow-Credentials", "true");
+		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		httpServletResponse.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		httpServletResponse.addHeader("Access-Control-Allow-Headers", "Content-Type,X-CAF-Authorization-Token,sessionToken,X-TOKEN");
+
 		httpServletResponse.setCharacterEncoding("UTF-8");
 		httpServletResponse.setStatus(200);
 		PrintWriter writer = httpServletResponse.getWriter();

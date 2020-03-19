@@ -70,7 +70,7 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				.and()
 					//开放api路径
 					.authorizeRequests()
-					.antMatchers("/api/public/**", "/api/login")
+					.antMatchers("/api/public/**", "/api/login", "/api/logout")
 					.permitAll()
 					.anyRequest()
 					.authenticated()
@@ -82,8 +82,8 @@ public class WebSecurityConfigure extends WebSecurityConfigurerAdapter {
 				//开启自动配置的注销功能
 				.and()
 					.logout()
-					.logoutUrl("/api/logout")
 					//注销成功处理器
+					.logoutUrl("/api/logout")
 					.logoutSuccessHandler(logoutSuccessHandler)
 					.permitAll()
 				.and()
