@@ -7,6 +7,7 @@ import com.example.demo.service.CodeService;
 import com.example.demo.service.EmailService;
 import com.example.demo.utils.VerifyCodeUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -28,7 +29,7 @@ public class CodeServiceImpl implements CodeService {
 	private RedisTemplate<String, Object> redisTemplate;
 
 	@Autowired
-	private EmailService emailService;
+	private RabbitTemplate rabbitTemplate;
 
 	@Override
 	public VerificationCodeAO addCode(VerificationCodeAO verificationCodeAO) {
@@ -92,13 +93,12 @@ public class CodeServiceImpl implements CodeService {
 		// 存入缓存
 		valueOperations.set(verifyCodeKey, verificationCodeAO, 60 * 10, TimeUnit.SECONDS);
 
-		// 发送邮件
+		// 将邮件发送到消息队列中
 		EmailEntity emailEntity = EmailEntity.builder()
 				.to(verificationCodeAO.getBusinessKey())
 				.subject("验证码")
 				.context(verificationCodeAO.getCode()).build();
-		emailService.send(emailEntity);
-
+		rabbitTemplate.convertAndSend("TestDirectExchange", "TestDirectRouting", emailEntity);
 		return verificationCodeAO;
 
 	}

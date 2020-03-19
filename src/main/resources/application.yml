@@ -22,6 +22,12 @@ spring:
         #指定jpa的自动表生成策略，驼峰自动映射为下划线格式
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
 
+  rabbitmq:
+    host: 180.76.248.216
+    port: 5672
+    username: admin
+    password: 123456
+
   datasource:
     username: root
     password: root
