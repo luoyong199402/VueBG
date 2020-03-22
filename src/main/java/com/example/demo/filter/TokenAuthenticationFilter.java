@@ -35,6 +35,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 			return;
 		}
 
+
 		TokenStore tokenStore = (TokenStore) tokenManager.getToken(header);
 		Authentication authentication = getAuthentication(tokenStore);
 
