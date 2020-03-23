@@ -66,6 +66,19 @@ public class InfoCategoryServiceImpl implements InfoCategoryService {
     }
 
     @Override
+    public InfoCategoryDTO updateInfoCategory(Long id, InfoCategoryDTO categoryDTO) {
+        Optional<InfoCategoryDO> optionalInfoCategoryDO = infoCategoryDao.findById(id);
+        optionalInfoCategoryDO.orElseThrow(() -> new InfoCategoryNotFoundException());
+
+        optionalInfoCategoryDO.get().setCode(categoryDTO.getCode());
+        optionalInfoCategoryDO.get().setName(categoryDTO.getName());
+        optionalInfoCategoryDO.get().setSort(categoryDTO.getSort());
+
+        InfoCategoryDO saveInfoCategoryDO = infoCategoryDao.save(optionalInfoCategoryDO.get());
+        return orikaBeanMapper.map(saveInfoCategoryDO, InfoCategoryDTO.class);
+    }
+
+    @Override
     public List<InfoCategoryDTO> getInfoCategoryByLevel(Integer level) {
         List<InfoCategoryDO> infoCategoryDOS = infoCategoryDao.findByLevelOrderBySort(level);
         return orikaBeanMapper.mapAsList(infoCategoryDOS, InfoCategoryDTO.class);

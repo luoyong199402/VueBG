@@ -9,6 +9,8 @@ public interface InfoCategoryService {
 
     InfoCategoryDTO deleteInfoCategory(Long id);
 
+    InfoCategoryDTO updateInfoCategory(Long id, InfoCategoryDTO categoryDTO);
+
     List<InfoCategoryDTO> getInfoCategoryByLevel(Integer level);
 
     List<InfoCategoryDTO> getInfoCategoryByParentId(Long parentId);

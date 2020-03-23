@@ -25,6 +25,5 @@ public class DirectReceiver {
         } catch (Exception e) {
             log.info("发送邮件失败！" + e);
         }
-
     }
 }

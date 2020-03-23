@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/info/category")
-@CrossOrigin("*")
 public class InfoCategoryController {
 
     @Autowired
@@ -23,6 +22,11 @@ public class InfoCategoryController {
     @DeleteMapping("/{id}")
     public InfoCategoryDTO deleteInfoCategory(@PathVariable Long id) {
         return infoCategoryService.deleteInfoCategory(id);
+    }
+
+    @PutMapping("/{id}")
+    public InfoCategoryDTO deleteInfoCategory(@PathVariable Long id, @RequestBody InfoCategoryDTO infoCategoryDTO) {
+        return infoCategoryService.updateInfoCategory(id, infoCategoryDTO);
     }
 
     @GetMapping("/level/{level}")

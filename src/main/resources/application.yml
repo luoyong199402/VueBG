@@ -45,8 +45,6 @@ spring:
       connection-timeout: 30000
       connection-test-query: SELECT 1
 
-
-
   redis:
     database: 0
     host: 180.76.248.216
