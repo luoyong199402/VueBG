@@ -10,6 +10,11 @@ import com.example.demo.orika.OrikaBeanMapper;
 import com.example.demo.orika.PageConvertMapper;
 import com.example.demo.service.info.InfoCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@CacheConfig(cacheNames = "info")
 public class InfoCategoryServiceImpl implements InfoCategoryService {
 
     @Autowired
@@ -29,6 +35,7 @@ public class InfoCategoryServiceImpl implements InfoCategoryService {
     private PageConvertMapper pageConvertMapper;
 
     @Override
+    @CachePut(key = "#categoryDTO.id")
     public InfoCategoryDTO addInfoCategory(InfoCategoryDTO categoryDTO) {
         if (infoCategoryDao.existsByParentIdAndCode(categoryDTO.getParentId(), categoryDTO.getCode())) {
             throw new InfoCategoryRepeatException();
@@ -52,6 +59,7 @@ public class InfoCategoryServiceImpl implements InfoCategoryService {
 
     @Override
     @Transactional
+    @CacheEvict
     public InfoCategoryDTO deleteInfoCategory(Long id) {
         Optional<InfoCategoryDO> optionalInfoCategoryDO = infoCategoryDao.findById(id);
         optionalInfoCategoryDO.orElseThrow(() -> new InfoCategoryNotFoundException());
@@ -66,6 +74,7 @@ public class InfoCategoryServiceImpl implements InfoCategoryService {
     }
 
     @Override
+    @CachePut(key = "#id")
     public InfoCategoryDTO updateInfoCategory(Long id, InfoCategoryDTO categoryDTO) {
         Optional<InfoCategoryDO> optionalInfoCategoryDO = infoCategoryDao.findById(id);
         optionalInfoCategoryDO.orElseThrow(() -> new InfoCategoryNotFoundException());
@@ -88,5 +97,11 @@ public class InfoCategoryServiceImpl implements InfoCategoryService {
     public List<InfoCategoryDTO> getInfoCategoryByParentId(Long parentId) {
         List<InfoCategoryDO> infoCategoryDOS = infoCategoryDao.findByParentIdOrderBySort(parentId);
         return orikaBeanMapper.mapAsList(infoCategoryDOS, InfoCategoryDTO.class);
+    }
+
+    @Override
+    @Cacheable
+    public InfoCategoryDTO getInfoCategoryById(Long id) {
+        return orikaBeanMapper.map(infoCategoryDao.findById(id).get(), InfoCategoryDTO.class);
     }
 }

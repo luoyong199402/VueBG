@@ -14,4 +14,6 @@ public interface InfoCategoryService {
     List<InfoCategoryDTO> getInfoCategoryByLevel(Integer level);
 
     List<InfoCategoryDTO> getInfoCategoryByParentId(Long parentId);
+
+    InfoCategoryDTO getInfoCategoryById(Long id);
 }
