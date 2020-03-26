@@ -95,7 +95,7 @@ public class InfoServiceImpl implements InfoService {
 			}
 
 			if (infoQuery.getCreateTimeEndTime() != null) {
-				predicateList.add(cb.greaterThanOrEqualTo(root.<Date>get("createTime"), infoQuery.getCreateTimeEndTime()));
+				predicateList.add(cb.lessThanOrEqualTo(root.<Date>get("createTime"), infoQuery.getCreateTimeEndTime()));
 			}
 
 			return cb.and(predicateList.toArray(new Predicate[predicateList.size()]));
