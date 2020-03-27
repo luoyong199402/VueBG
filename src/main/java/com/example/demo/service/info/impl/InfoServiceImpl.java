@@ -10,6 +10,7 @@ import com.example.demo.orika.OrikaBeanMapper;
 import com.example.demo.orika.Page;
 import com.example.demo.orika.PageConvertMapper;
 import com.example.demo.service.info.InfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class InfoServiceImpl implements InfoService {
 	@Autowired
 	private OrikaBeanMapper orikaBeanMapper;
@@ -64,13 +66,15 @@ public class InfoServiceImpl implements InfoService {
 		infoDO.setTitle(infoDTO.getTitle());
 		infoDO.setCategoryId(infoDO.getCategoryId());
 
+		infoDao.save(infoDO);
 		return orikaBeanMapper.map(infoDOOptional, InfoDTO.class);
 	}
 
 	@Override
 	public InfoDTO getInfoById(Long id) {
 		Optional<InfoDO> infoDOOptional = infoDao.findById(id);
-		return orikaBeanMapper.map(infoDOOptional, InfoDTO.class);
+		InfoDTO retInfoDTO = orikaBeanMapper.map(infoDOOptional.get(), InfoDTO.class);
+		return retInfoDTO;
 	}
 
 
